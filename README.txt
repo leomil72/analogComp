@@ -12,6 +12,7 @@ Written by Leonardo Miliani <leonardo AT leonardomiliani DOT com>
 ***********************
 Version history
 
+v. 1.1.0:  fixed several issues with ATtinyx313 and ATtinyx5
 v. 1.0.1:  fixed Atmega8/A support
 v. 1.0.0:  new methods and bug fixing
 v. 0.1.0:  the library can enable/disable an interrupt on AC
@@ -143,4 +144,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ***********************
 Document revision
 
-4th revision: 2012/11/04
+5th revision: 2013/03/04

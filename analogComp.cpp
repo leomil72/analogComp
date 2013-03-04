@@ -38,11 +38,9 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
 		tempAIN1 = 0; //choose ADC0
 	}
 #endif
-//AtTiny2313/4313 don't have ADC
-#ifdef ATTINYx313
-	tempAIN1 == AIN1; //choose pin AIN1
-#endif
 
+//AtTiny2313/4313 don't have ADC, so inputs are always AIN0 and AIN1
+#ifndef ATTINYx313
     //choose the input for inverting input
     if ((tempAIN1 >= 0) && (tempAIN1 < NUM_ANALOG_INPUTS)) { //set the AC Multiplexed Input using an analog input pin
         oldADCSRA = ADCSRA;
@@ -53,8 +51,19 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
     } else {
         AC_REGISTER &= ~(1<<ACME); //set pin AIN1 
     }
-#ifndef ATMEGA8
-    DIDR1 &= ~((1<<AIN1D) | (1<<AIN0D)); //disable digital buffer on pins AIN0 && AIN1 to reduce current consumption
+#endif
+
+//disable digital buffer on pins AIN0 && AIN1 to reduce current consumption
+#if defined(ATTINYx5)
+	DIDR0 &= ~((1<<AIN1D) | (1<<AIN0D)); 
+#elif defined(ATTINYx4)
+	DIDR0 &= ~((1<<ADC2D) | (1<<ADC1D));
+#elif defined (ATMEGAx4)
+	DIDR1 &= ~(1<<AIN0D);
+#elif defined (ATTINYx313)
+	DIDR &= ~((1<<AIN1D) | (1<<AIN0D));
+#elif defined (ATMEGAx8) || defined(ATMEGAx4) || defined(ATMEGAx0)
+    DIDR1 &= ~((1<<AIN1D) | (1<<AIN0D)); 
 #endif
     _initialized = 1;
     return 0; //OK
@@ -108,13 +117,26 @@ void analogComp::setOff() {
 			_interruptEnabled = 0;
 		}
         ACSR |= (1<<ACD); //switch off the AC
-#ifndef ATMEGA8
-        DIDR1 |= ((1<<AIN1D) | (1<<AIN0D)); //reenable digital buffer on pins AIN0 && AIN1
+        
+        //reenable digital buffer on pins AIN0 && AIN1
+#if defined(ATTINYx5)
+		DIDR0 |= ((1<<AIN1D) | (1<<AIN0D)); 
+#elif defined(ATTINYx4)
+		DIDR0 |= ((1<<ADC2D) | (1<<ADC1D));
+#elif defined (ATMEGAx4)
+		DIDR1 |= (1<<AIN0D);
+#elif defined (ATTINYx313)
+		DIDR |= ((1<<AIN1D) | (1<<AIN0D));
+#elif defined (ATMEGAx8) || defined(ATMEGAx4) || defined(ATMEGAx0)
+		DIDR1 |= ((1<<AIN1D) | (1<<AIN0D)); 
 #endif
+
+#ifndef ATTINYx313
         if ((AC_REGISTER & (1<<ACME)) == 1) { //we must reset the ADC
             ADCSRA = oldADCSRA;
         }
-        _initialized = 0;
+#endif
+		_initialized = 0;
     }
 }
 
