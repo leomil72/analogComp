@@ -12,6 +12,7 @@ Written by Leonardo Miliani <leonardo AT leonardomiliani DOT com>
 ***********************
 Version history
 
+v. 1.1.1:  now it calls the correct interrupt vector for the MCU in use
 v. 1.1.0:  fixed several issues with ATtinyx313 and ATtinyx5
 v. 1.0.1:  fixed Atmega8/A support
 v. 1.0.0:  new methods and bug fixing
