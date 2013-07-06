@@ -8,7 +8,7 @@
     The latest version of this library can be found at:
     http://www.leonardomiliani.com/
     	
-	Current version: 1.1.1 - 2013/03/08
+	Current version: 1.2.0 - 2013/07/02
     (for a complete history of the previous versions, see the README file)
     
 	This library is free software; you can redistribute it and/or

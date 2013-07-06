@@ -41,6 +41,20 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
 
 //AtTiny2313/4313 don't have ADC, so inputs are always AIN0 and AIN1
 #ifndef ATTINYx313
+    // allow for channel or pin numbers
+#if defined (ATMEGAx0)
+    if (tempAIN1 >= 54) tempAIN1 -= 54; 
+#elif defined (ATMEGAxU)
+	if (tempAIN1 >= 18) tempAIN1 -= 18;
+#elif defined (ATMEGAx4)
+	if (tempAIN1 >= 24) tempAIN1 -= 24;
+#elif defined (CORE_ANALOG_FIRST) && (defined (ATTINYx5) || defined (ATTINYx4))
+    if (tempAIN1 >= CORE_ANALOG_FIRST) {
+        tempAIN1 -= CORE_ANALOG_FIRST;
+    }
+#else
+	if (tempAIN1 >= 14) tempAIN1 -= 14;
+#endif
     //choose the input for inverting input
     if ((tempAIN1 >= 0) && (tempAIN1 < NUM_ANALOG_INPUTS)) { //set the AC Multiplexed Input using an analog input pin
         oldADCSRA = ADCSRA;
