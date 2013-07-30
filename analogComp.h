@@ -4,13 +4,13 @@
     that is integrated in several Atmel microcontrollers
 
 	Written by Leonardo Miliani <leonardo AT leonardomiliani DOT com>
-    
+
     The latest version of this library can be found at:
     http://www.leonardomiliani.com/
-    	
-	Current version: 1.2.0 - 2013/07/02
+
+	Current version: 1.2.1 - 2013/07/30
     (for a complete history of the previous versions, see the README file)
-    
+
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public
 	License as published by the Free Software Foundation; either
@@ -18,7 +18,7 @@
 
 	This library is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 */
 
@@ -56,7 +56,7 @@
 #define ATTINYx4
 #define NUM_ANALOG_INPUTS 8
 #elif defined (__AVR_ATmega640__) || defined (__AVR_ATmega1280__) || defined (__AVR_ATmega1281__) || defined (__AVR_ATmega2560__) || defined (__AVR_ATmega2561__)
-#define ATMEGAx0 
+#define ATMEGAx0
 #define NUM_ANALOG_INPUTS 16
 #elif defined (__AVR_ATmega344__) || defined (__AVR_ATmega344P__) || defined (__AVR_ATmega644__) || defined (__AVR_ATmega644P__) || defined (__AVR_ATmega644PA__) || defined (__AVR_ATmega1284P__)
 #define ATMEGAx4
@@ -78,7 +78,7 @@ const uint8_t AIN1 = 255;
 
 
 class analogComp {
-	public: 
+	public:
 		//public methods
 		//analogComp();
         uint8_t setOn(uint8_t = AIN0, uint8_t = AIN1);

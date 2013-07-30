@@ -2,7 +2,7 @@
 
 analogComp
 
-This little library can be used to set and manage the analog 
+This little library can be used to set and manage the analog
 comparator that is integrated in a wide variety of
 Atmel microcontrollers
 
@@ -12,6 +12,7 @@ Written by Leonardo Miliani <leonardo AT leonardomiliani DOT com>
 ***********************
 Version history
 
+v. 1.2.1:  fixed a bug that let the ADC off after a comparison
 v. 1.2.0:  fixed a bug into the conversion from analog to phisical pins
 v. 1.1.1:  now it calls the correct interrupt vector for the MCU in use
 v. 1.1.0:  fixed several issues with ATtinyx313 and ATtinyx5
@@ -25,16 +26,16 @@ v. 0.0.1:  early release - prototype of the library
 How to use it - Methods
 
 Unpack the library and copy it into your /libraries folder, that usually
-is in your sketchs' folder. Then include the library by adding the 
+is in your sketchs' folder. Then include the library by adding the
 following code at the top of your sketch:
 
 #include "analogComp.h"
 
 
-Now you can set what has to be connected to the inverting (AIN-) and 
+Now you can set what has to be connected to the inverting (AIN-) and
 non-inverting (AIN+) inputs of the analog comparator. Usually, the
 AIN+ is connected to external pin AIN0 and the AIN- is connected to
-external pin AIN1. The AIN+ can be connected to the internal voltage 
+external pin AIN1. The AIN+ can be connected to the internal voltage
 reference (usually 1V1), while the AIN- can be connected to any of the
 analog input pins of the microcontroller. (see "Supported Microcontrollers"
 for specific limitations)
@@ -58,7 +59,7 @@ You can enable an interrupt routine to be executed when an event occurs:
 
 analogComparator.enableInterrupt(myFunction[, event]);
 
-myFunction is the name of the function to be called when the event 
+myFunction is the name of the function to be called when the event
 occurs. event can be:
 CHANGE: when the comparation changes between AIN+>AIN- and AIN+<AIN-
 RISING: when the voltage on AIN+ becomes greater than the voltage on AIN-
@@ -80,7 +81,7 @@ before to return (default is 5000).
 This method will return false (0) if voltage on AIN- will remain
 greater than the voltage on AIN+ for the whole interval specified by
 timeout; it will return true (1) if AIN+ will become greater than
-AIN- during the interval. 
+AIN- during the interval.
 
 If the analog comparator won't be set up before to call the waitComp
 method, by default the library will use AIN0 and AIN1 pins.
@@ -90,7 +91,7 @@ To switch off the analog comparator, call this method:
 
 analogComparator.setOff();
 
-It will switch off the analog comparator and will disable any enabled 
+It will switch off the analog comparator and will disable any enabled
 interrupt.
 
 
@@ -140,10 +141,10 @@ option) any later version.
 
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 
 ***********************
 Document revision
 
-6th revision: 2013/07/02
+7th revision: 2013/07/30
