@@ -8,7 +8,7 @@
 
 
 //global variables
-typedef void (*userFunc)(void); 
+typedef void (*userFunc)(void);
 volatile static userFunc userFunction;
 uint8_t _initialized;
 uint8_t _interruptEnabled;
@@ -20,18 +20,18 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
     if (_initialized) { //already running
         return 1;
     }
-    
+
     //initialize the analog comparator (AC)
     ACSR &= ~(1<<ACIE); //disable interrupts on AC
     ACSR &= ~(1<<ACD); //switch on the AC
-    
+
     //choose the input for non-inverting input
     if (tempAIN0 == INTERNAL_REFERENCE) {
-        ACSR |= (1<<ACBG); //set Internal Voltage Reference (1V1) 
+        ACSR |= (1<<ACBG); //set Internal Voltage Reference (1V1)
     } else {
         ACSR &= ~(1<<ACBG); //set pin AIN0
     }
-    
+
 //for Atmega32U4, only ADMUX is allowed as input for AIN-
 #ifdef ATMEGAxU
 	if (tempAIN1 == AIN1) {
@@ -43,7 +43,7 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
 #ifndef ATTINYx313
     // allow for channel or pin numbers
 #if defined (ATMEGAx0)
-    if (tempAIN1 >= 54) tempAIN1 -= 54; 
+    if (tempAIN1 >= 54) tempAIN1 -= 54;
 #elif defined (ATMEGAxU)
 	if (tempAIN1 >= 18) tempAIN1 -= 18;
 #elif defined (ATMEGAx4)
@@ -56,20 +56,20 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
 	if (tempAIN1 >= 14) tempAIN1 -= 14;
 #endif
     //choose the input for inverting input
+    oldADCSRA = ADCSRA;
     if ((tempAIN1 >= 0) && (tempAIN1 < NUM_ANALOG_INPUTS)) { //set the AC Multiplexed Input using an analog input pin
-        oldADCSRA = ADCSRA;
         ADCSRA &= ~(1<<ADEN);
         ADMUX &= ~31; //reset the first 5 bits
         ADMUX |= tempAIN1; //choose the ADC channel (0..NUM_ANALOG_INPUTS-1)
         AC_REGISTER |= (1<<ACME);
     } else {
-        AC_REGISTER &= ~(1<<ACME); //set pin AIN1 
+        AC_REGISTER &= ~(1<<ACME); //set pin AIN1
     }
 #endif
 
 //disable digital buffer on pins AIN0 && AIN1 to reduce current consumption
 #if defined(ATTINYx5)
-	DIDR0 &= ~((1<<AIN1D) | (1<<AIN0D)); 
+	DIDR0 &= ~((1<<AIN1D) | (1<<AIN0D));
 #elif defined(ATTINYx4)
 	DIDR0 &= ~((1<<ADC2D) | (1<<ADC1D));
 #elif defined (ATMEGAx4)
@@ -77,7 +77,7 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
 #elif defined (ATTINYx313)
 	DIDR &= ~((1<<AIN1D) | (1<<AIN0D));
 #elif defined (ATMEGAx8) || defined(ATMEGAx4) || defined(ATMEGAx0)
-    DIDR1 &= ~((1<<AIN1D) | (1<<AIN0D)); 
+    DIDR1 &= ~((1<<AIN1D) | (1<<AIN0D));
 #endif
     _initialized = 1;
     return 0; //OK
@@ -88,13 +88,13 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
 void analogComp::enableInterrupt(void (*tempUserFunction)(void), uint8_t tempMode) {
     if (_interruptEnabled) { //disable interrupts
 		SREG &= ~(1<<SREG_I);
-        ACSR &= ~(1<<ACIE); 
+        ACSR &= ~(1<<ACIE);
     }
-    
+
     if (!_initialized) {
         setOn(AIN0, AIN1);
     }
-    
+
     //set the interrupt mode
     userFunction = tempUserFunction;
     if (tempMode == CHANGE) {
@@ -104,10 +104,10 @@ void analogComp::enableInterrupt(void (*tempUserFunction)(void), uint8_t tempMod
         ACSR |= (1<<ACIS1);
     } else { //default is RISING
         ACSR |= ((1<<ACIS1) | (1<<ACIS0));
-        
+
     }
     //enable interrupts
-    ACSR |= (1<<ACIE); 
+    ACSR |= (1<<ACIE);
     SREG |= (1<<SREG_I);
     _interruptEnabled = 1;
 }
@@ -131,10 +131,10 @@ void analogComp::setOff() {
 			_interruptEnabled = 0;
 		}
         ACSR |= (1<<ACD); //switch off the AC
-        
+
         //reenable digital buffer on pins AIN0 && AIN1
 #if defined(ATTINYx5)
-		DIDR0 |= ((1<<AIN1D) | (1<<AIN0D)); 
+		DIDR0 |= ((1<<AIN1D) | (1<<AIN0D));
 #elif defined(ATTINYx4)
 		DIDR0 |= ((1<<ADC2D) | (1<<ADC1D));
 #elif defined (ATMEGAx4)
@@ -142,12 +142,13 @@ void analogComp::setOff() {
 #elif defined (ATTINYx313)
 		DIDR |= ((1<<AIN1D) | (1<<AIN0D));
 #elif defined (ATMEGAx8) || defined(ATMEGAx4) || defined(ATMEGAx0)
-		DIDR1 |= ((1<<AIN1D) | (1<<AIN0D)); 
+		DIDR1 |= ((1<<AIN1D) | (1<<AIN0D));
 #endif
 
 #ifndef ATTINYx313
-        if ((AC_REGISTER & (1<<ACME)) == 1) { //we must reset the ADC
-            ADCSRA = oldADCSRA;
+        //if ((AC_REGISTER & (1<<ACME)) == 1) { //we must reset the ADC
+        if (oldADCSRA & (1<<ADEN)) { //ADC has to be powered up
+            ADCSRA |= (1<<ADEN); //ACDSRA = oldADCSRA;
         }
 #endif
 		_initialized = 0;
@@ -159,20 +160,20 @@ void analogComp::setOff() {
 uint8_t analogComp::waitComp(unsigned long _timeOut) {
 	//exit if the interrupt is on
 	if (_interruptEnabled) {
-		return 0; //error 
+		return 0; //error
 	}
-	
+
 	//no timeOut?
 	if (_timeOut == 0) {
 		_timeOut = 5000; //5 secs
 	}
-	
+
 	//set up the analog comparator if it isn't
 	if (!_initialized) {
 		setOn(AIN0, AIN1);
 		_initialized = 0;
 	}
-	
+
 	//wait for the comparation
 	unsigned long _tempMillis = millis() + _timeOut;
 	do {
@@ -180,7 +181,7 @@ uint8_t analogComp::waitComp(unsigned long _timeOut) {
 			return 1;
 		}
 	} while ((long)(millis() - _tempMillis) < 0);
-	
+
 	//switch off the analog comparator if it was off
 	if (!_initialized) {
 		setOff();
