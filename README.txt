@@ -2,16 +2,17 @@
 
 analogComp
 
-This little library can be used to set and manage the analog
+This little library can be used to set and manage the analog 
 comparator that is integrated in a wide variety of
 Atmel microcontrollers
 
-Written by Leonardo Miliani <leonardo AT leonardomiliani DOT com>
+Written by Leonardo Miliani <www DOT leonardomiliani DOT com>
 
 
 ***********************
 Version history
 
+v. 1.2.2:  added compatibility with Arduino IDE >= 1.6.7
 v. 1.2.1:  fixed a bug that let the ADC off after a comparison
 v. 1.2.0:  fixed a bug into the conversion from analog to phisical pins
 v. 1.1.1:  now it calls the correct interrupt vector for the MCU in use
@@ -147,4 +148,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ***********************
 Document revision
 
-7th revision: 2013/07/30
+9th revision: 2016/02/21

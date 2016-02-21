@@ -8,7 +8,7 @@
     The latest version of this library can be found at:
     http://www.leonardomiliani.com/
 
-	Current version: 1.2.1 - 2013/07/30
+	Current version: 1.2.2 - 2016/02/20
     (for a complete history of the previous versions, see the README file)
 
 	This library is free software; you can redistribute it and/or
@@ -26,6 +26,8 @@
 #ifndef ANALOG_COMP_H
 #define ANALOG_COMP_H
 
+//library version
+#define ANALOGCOMP_VERSION 122
 
 //Library is compatible both with Arduino <=0023 and Arduino >=100
 #if defined(ARDUINO) && (ARDUINO >= 100)
@@ -88,6 +90,7 @@ class analogComp {
         uint8_t waitComp(unsigned long = 0);
     private:
         //private methods
+        uint8_t _initialized;
 };
 extern analogComp analogComparator;
 
