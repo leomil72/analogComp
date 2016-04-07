@@ -68,7 +68,8 @@
 #define NUM_ANALOG_INPUTS 0
 #elif defined (__AVR_ATmega32U4__)
 #define ATMEGAxU
-#define NUM_ANALOG_INPUTS 12
+#define NUM_ANALOG_INPUTS 14 	// there are more inputs on the 32u4 than are broken out to the board
+															// and they are not mapped sequentially
 #else
 #error Sorry, microcontroller not supported!
 #endif
