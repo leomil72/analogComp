@@ -34,7 +34,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 //global variables
 const byte LED13 = 13; //set the output LED
-boolean enableLed = false; //used to check if the interrupt has raised
+volatile boolean enableLed = false; //used to check if the interrupt has raised
 
 //let's set up the hardware
 void setup() {
