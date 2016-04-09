@@ -122,7 +122,7 @@ and Arduino boards:
 - Atmega8
 - Atmega48/88/168/328 (Arduino UNO)
 - Atmega640/1280/1281/2560/2561 (Arduino MEGA)
-- Atmega32U4** (Arduino Leonardo)
+- Atmega32U4** (Arduino Leonardo/Micro)
 
 Specific limitations:
 * Attiny2313/4313:
@@ -130,9 +130,8 @@ due to the fact that these MCUs don't have an integrated ADC, only AIN1
 is allowed for AIN-.
 
 ** Atmega32U4:
-the Atmega32U4 AIN- can only be connected to an analog input pin because
-it has no AIN1 pin.
-
+don't use analog input lines A2 & A3 because they are not phisically connected
+to external pins on Leonardo & Micro boards
 ***********************
 Licence
 
@@ -149,4 +148,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ***********************
 Document revision
 
-9th revision: 2016/02/21
+10th revision: 2016/04/09
