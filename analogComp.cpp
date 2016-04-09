@@ -45,7 +45,47 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
 #if defined (ATMEGAx0)
     if (tempAIN1 >= 54) tempAIN1 -= 54;
 #elif defined (ATMEGAxU)
-	if (tempAIN1 >= 18) tempAIN1 -= 18;
+    //ATMEGAxU pins A0..A11 don't map to boards in sequence, so easier to deal with this in a case statement
+    if(tempAIN1>=A0 && tempAIN1<=A11){
+        switch(tempAIN1){
+            case A0:
+                tempAIN1 = 7;
+                break;
+            case A1:
+                tempAIN1 = 6;
+                break;
+            case A2:
+                tempAIN1 = 5;
+                break;
+            case A3:
+                tempAIN1 = 4;
+                break;
+            case A4:
+                tempAIN1 = 1;
+                break;
+            case A5:
+                tempAIN1 = 0;
+                break;
+            case A6:
+                tempAIN1 = 8;
+                break;
+            case A7:
+                tempAIN1 = 10;
+                break;
+            case A8:
+                tempAIN1 = 11;
+                break;
+            case A9:
+                tempAIN1 = 12;
+                break;
+            case A10:
+                tempAIN1 = 13;
+                break;
+            case A11:
+                tempAIN1 = 9;
+                break;
+        }
+    }
 #elif defined (ATMEGAx4)
 	if (tempAIN1 >= 24) tempAIN1 -= 24;
 #elif defined (CORE_ANALOG_FIRST) && (defined (ATTINYx5) || defined (ATTINYx4))
@@ -60,7 +100,69 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
     if ((tempAIN1 >= 0) && (tempAIN1 < NUM_ANALOG_INPUTS)) { //set the AC Multiplexed Input using an analog input pin
         ADCSRA &= ~(1<<ADEN);
         ADMUX &= ~31; //reset the first 5 bits
-        ADMUX |= tempAIN1; //choose the ADC channel (0..NUM_ANALOG_INPUTS-1)
+        #ifndef ATMEGAxU
+            ADMUX |= tempAIN1; //choose the ADC channel (0..NUM_ANALOG_INPUTS-1)
+        #else 
+            switch(tempAIN1){
+                // see p. 313 of Atmel-7766J-USB-ATmega16U4/32U4-Datasheet_04/2016
+                case 0:
+                    //ADMUX |= 0b00000000; // redundant
+                    AC_REGISTER &= ~bit(MUX5);
+                    break;
+                case 1:
+                    ADMUX |= 0b00000001;
+                    AC_REGISTER &= ~bit(MUX5);                
+                    break;
+                case 2:
+                    // not a valid choice - and not broken out onto Leonardo / Micro type boards
+                    break;
+                case 3:
+                    // not a valid choice - and not broken out onto Leonardo / Micro type boards                
+                    break;
+                case 4:
+                    ADMUX |= 0b00000100;
+                    AC_REGISTER &= ~bit(MUX5);                                
+                    break;
+                case 5:
+                    ADMUX |= 0b00000101;
+                    AC_REGISTER &= ~bit(MUX5);                
+                    break;
+                case 6:
+                    ADMUX |= 0b00000110;
+                    AC_REGISTER &= ~bit(MUX5);                
+                    break;
+                case 7:
+                    ADMUX |= 0b00000111;
+                    AC_REGISTER &= ~bit(MUX5);                
+                    break;
+                case 8:
+                    //ADMUX |= 0b00000000; // redundant
+                    AC_REGISTER |= bit(MUX5);                
+                    break;
+                case 9:
+                    ADMUX |= 0b00000001;
+                    AC_REGISTER |= bit(MUX5); 
+                    break;
+                case 10:
+                    ADMUX |= 0b00000010; 
+                    AC_REGISTER |= bit(MUX5); 
+                    break;
+                case 11:
+                    ADMUX |= 0b00000011; 
+                    AC_REGISTER |= bit(MUX5); 
+                    break;
+                case 12:
+                    ADMUX |= 0b00000100; 
+                    AC_REGISTER |= bit(MUX5); 
+                    break;
+                case 13:
+                    ADMUX |= 0b00000101; 
+                    AC_REGISTER |= bit(MUX5); 
+                    break;
+                default:
+                    break;
+            }
+        #endif    
         AC_REGISTER |= (1<<ACME);
     } else {
         AC_REGISTER &= ~(1<<ACME); //set pin AIN1
@@ -192,7 +294,7 @@ uint8_t analogComp::waitComp(unsigned long _timeOut) {
 
 //ISR (Interrupt Service Routine) called by the analog comparator when
 //the user choose the raise of an interrupt
-#if defined(ATMEGAx8) || defined(ATMEGAx0) || defined(ATMEGAx4)
+#if defined(ATMEGAx8) || defined(ATMEGAx0) || defined(ATMEGAx4) || defined(ATMEGAxU)
 ISR(ANALOG_COMP_vect) {
 #else
 ISR(ANA_COMP_vect) {
