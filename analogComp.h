@@ -27,7 +27,7 @@
 #define ANALOG_COMP_H
 
 //library version
-#define ANALOGCOMP_VERSION 122
+#define ANALOGCOMP_VERSION 123
 
 //Library is compatible both with Arduino <=0023 and Arduino >=100
 #if defined(ARDUINO) && (ARDUINO >= 100)
