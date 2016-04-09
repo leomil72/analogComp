@@ -12,6 +12,7 @@ Written by Leonardo Miliani <www DOT leonardomiliani DOT com>
 ***********************
 Version history
 
+v. 1.2.3:  added support for ATmega32U4 (old Leonardo boards) - thanks to stefandz
 v. 1.2.2:  added compatibility with Arduino IDE >= 1.6.7
 v. 1.2.1:  fixed a bug that let the ADC off after a comparison
 v. 1.2.0:  fixed a bug into the conversion from analog to phisical pins
