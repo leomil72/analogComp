@@ -115,23 +115,30 @@ Supported microcontrollers
 
 Actually the library works with a wide variety of Atmel microcontrollers
 and Arduino boards:
-- Attiny2313/4313*
+- Attiny2313/4313 [1]
 - Attiny24/44/84
 - Attiny25/45/85
 - Atmega344/644/1284
 - Atmega8
-- Atmega48/88/168/328 (Arduino UNO)
+- Atmega48/88/168/328 [3] (Arduino UNO)
 - Atmega640/1280/1281/2560/2561 (Arduino MEGA)
-- Atmega32U4** (Arduino Leonardo/Micro)
+- Atmega32U4 [2] (Arduino Leonardo/Micro)
 
 Specific limitations:
-* Attiny2313/4313:
+[1] Attiny2313/4313:
 due to the fact that these MCUs don't have an integrated ADC, only AIN1
 is allowed for AIN-.
 
-** Atmega32U4:
+[2] Atmega32U4:
 don't use analog input lines A2 & A3 because they are not phisically connected
 to external pins on Leonardo & Micro boards
+
+[3] Atmegax8:
+some SMD versions of this chip have 2 extra analog input pins; so, to be able to use
+them inside the library, please edit the analogComp.h file and change the value from
+6 to 8 of the following compiler's directive:
+#define ATMEGAx8
+#define NUM_ANALOG_INPUTS 6
 ***********************
 Licence
 
@@ -148,4 +155,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ***********************
 Document revision
 
-10th revision: 2016/04/09
+11th revision: 2016/11/08
