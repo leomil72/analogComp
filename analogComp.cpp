@@ -249,7 +249,7 @@ void analogComp::setOff() {
 
 #ifndef ATTINYx313
         if (oldADCSRA & (1<<ADEN)) { //ADC has to be powered up
-            AC_REGISTER |= (1<<ADEN); 
+            ADCSRA |= (1<<ADEN);
         }
 #endif
 		_initialized = 0;

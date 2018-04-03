@@ -41,7 +41,7 @@
 #undef NUM_ANALOG_INPUTS
 #endif
 
-#define AC_REGISTER ADCSRA
+#define AC_REGISTER ADCSRB
 //check if the micro is supported
 #if defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega168__) || defined (__AVR_ATmega328__) || defined (__AVR_ATmega48P__) || defined (__AVR_ATmega88P__) || defined (__AVR_ATmega168P__) || defined (__AVR_ATmega328P__)
 	#define ATMEGAx8
