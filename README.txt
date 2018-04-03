@@ -2,7 +2,7 @@
 
 analogComp
 
-This little library can be used to set and manage the analog 
+This little library can be used to set and manage the analog
 comparator that is integrated in a wide variety of
 Atmel microcontrollers
 
@@ -12,6 +12,7 @@ Written by Leonardo Miliani <www DOT leonardomiliani DOT com>
 ***********************
 Version history
 
+v. 1.2.4: fixed code to enable/disable digital buffers (they were inverted!) - thanks to ami2go. Fixed ADC enable/disable: for a type, the code worked on the wrong register
 v. 1.2.3:  added support for ATmega32U4 (old Leonardo boards) - thanks to stefandz
 v. 1.2.2:  added compatibility with Arduino IDE >= 1.6.7
 v. 1.2.1:  fixed a bug that let the ADC off after a comparison
@@ -139,6 +140,7 @@ them inside the library, please edit the analogComp.h file and change the value 
 6 to 8 of the following compiler's directive:
 #define ATMEGAx8
 #define NUM_ANALOG_INPUTS 6
+
 ***********************
 Licence
 
@@ -155,4 +157,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ***********************
 Document revision
 
-11th revision: 2016/11/08
+Last revision: 2018/04/03

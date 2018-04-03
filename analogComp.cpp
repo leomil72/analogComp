@@ -102,7 +102,7 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
         ADMUX &= ~31; //reset the first 5 bits
         #ifndef ATMEGAxU
             ADMUX |= tempAIN1; //choose the ADC channel (0..NUM_ANALOG_INPUTS-1)
-        #else 
+        #else
             switch(tempAIN1){
                 // see p. 313 of Atmel-7766J-USB-ATmega16U4/32U4-Datasheet_04/2016
                 case 0:
@@ -111,58 +111,58 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
                     break;
                 case 1:
                     ADMUX |= 0b00000001;
-                    AC_REGISTER &= ~bit(MUX5);                
+                    AC_REGISTER &= ~bit(MUX5);
                     break;
                 case 2:
                     // not a valid choice - and not broken out onto Leonardo / Micro type boards
                     break;
                 case 3:
-                    // not a valid choice - and not broken out onto Leonardo / Micro type boards                
+                    // not a valid choice - and not broken out onto Leonardo / Micro type boards
                     break;
                 case 4:
                     ADMUX |= 0b00000100;
-                    AC_REGISTER &= ~bit(MUX5);                                
+                    AC_REGISTER &= ~bit(MUX5);
                     break;
                 case 5:
                     ADMUX |= 0b00000101;
-                    AC_REGISTER &= ~bit(MUX5);                
+                    AC_REGISTER &= ~bit(MUX5);
                     break;
                 case 6:
                     ADMUX |= 0b00000110;
-                    AC_REGISTER &= ~bit(MUX5);                
+                    AC_REGISTER &= ~bit(MUX5);
                     break;
                 case 7:
                     ADMUX |= 0b00000111;
-                    AC_REGISTER &= ~bit(MUX5);                
+                    AC_REGISTER &= ~bit(MUX5);
                     break;
                 case 8:
                     //ADMUX |= 0b00000000; // redundant
-                    AC_REGISTER |= bit(MUX5);                
+                    AC_REGISTER |= bit(MUX5);
                     break;
                 case 9:
                     ADMUX |= 0b00000001;
-                    AC_REGISTER |= bit(MUX5); 
+                    AC_REGISTER |= bit(MUX5);
                     break;
                 case 10:
-                    ADMUX |= 0b00000010; 
-                    AC_REGISTER |= bit(MUX5); 
+                    ADMUX |= 0b00000010;
+                    AC_REGISTER |= bit(MUX5);
                     break;
                 case 11:
-                    ADMUX |= 0b00000011; 
-                    AC_REGISTER |= bit(MUX5); 
+                    ADMUX |= 0b00000011;
+                    AC_REGISTER |= bit(MUX5);
                     break;
                 case 12:
-                    ADMUX |= 0b00000100; 
-                    AC_REGISTER |= bit(MUX5); 
+                    ADMUX |= 0b00000100;
+                    AC_REGISTER |= bit(MUX5);
                     break;
                 case 13:
-                    ADMUX |= 0b00000101; 
-                    AC_REGISTER |= bit(MUX5); 
+                    ADMUX |= 0b00000101;
+                    AC_REGISTER |= bit(MUX5);
                     break;
                 default:
                     break;
             }
-        #endif    
+        #endif
         AC_REGISTER |= (1<<ACME);
     } else {
         AC_REGISTER &= ~(1<<ACME); //set pin AIN1
@@ -171,15 +171,15 @@ uint8_t analogComp::setOn(uint8_t tempAIN0, uint8_t tempAIN1) {
 
 //disable digital buffer on pins AIN0 && AIN1 to reduce current consumption
 #if defined(ATTINYx5)
-	DIDR0 &= ~((1<<AIN1D) | (1<<AIN0D));
+		DIDR0 |= ((1<<AIN1D) | (1<<AIN0D));
 #elif defined(ATTINYx4)
-	DIDR0 &= ~((1<<ADC2D) | (1<<ADC1D));
+		DIDR0 |= ((1<<ADC2D) | (1<<ADC1D));
 #elif defined (ATMEGAx4)
-	DIDR1 &= ~(1<<AIN0D);
+		DIDR1 |= (1<<AIN0D);
 #elif defined (ATTINYx313)
-	DIDR &= ~((1<<AIN1D) | (1<<AIN0D));
+		DIDR |= ((1<<AIN1D) | (1<<AIN0D));
 #elif defined (ATMEGAx8) || defined(ATMEGAx4) || defined(ATMEGAx0)
-    DIDR1 &= ~((1<<AIN1D) | (1<<AIN0D));
+		DIDR1 |= ((1<<AIN1D) | (1<<AIN0D));
 #endif
     _initialized = 1;
     return 0; //OK
@@ -234,23 +234,22 @@ void analogComp::setOff() {
 		}
         ACSR |= (1<<ACD); //switch off the AC
 
-        //reenable digital buffer on pins AIN0 && AIN1
+//reenable digital buffer on pins AIN0 && AIN1
 #if defined(ATTINYx5)
-		DIDR0 |= ((1<<AIN1D) | (1<<AIN0D));
+	DIDR0 &= ~((1<<AIN1D) | (1<<AIN0D));
 #elif defined(ATTINYx4)
-		DIDR0 |= ((1<<ADC2D) | (1<<ADC1D));
+	DIDR0 &= ~((1<<ADC2D) | (1<<ADC1D));
 #elif defined (ATMEGAx4)
-		DIDR1 |= (1<<AIN0D);
+	DIDR1 &= ~(1<<AIN0D);
 #elif defined (ATTINYx313)
-		DIDR |= ((1<<AIN1D) | (1<<AIN0D));
+	DIDR &= ~((1<<AIN1D) | (1<<AIN0D));
 #elif defined (ATMEGAx8) || defined(ATMEGAx4) || defined(ATMEGAx0)
-		DIDR1 |= ((1<<AIN1D) | (1<<AIN0D));
+    DIDR1 &= ~((1<<AIN1D) | (1<<AIN0D));
 #endif
 
 #ifndef ATTINYx313
-        //if ((AC_REGISTER & (1<<ACME)) == 1) { //we must reset the ADC
         if (oldADCSRA & (1<<ADEN)) { //ADC has to be powered up
-            AC_REGISTER |= (1<<ADEN); //ACDSRA = oldADCSRA;
+            AC_REGISTER |= (1<<ADEN); 
         }
 #endif
 		_initialized = 0;
